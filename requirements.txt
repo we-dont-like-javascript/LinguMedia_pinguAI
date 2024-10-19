@@ -1,3 +1,6 @@
 reflex==0.6.3
 requests
 uagents
+python-dotenv
+groq
+yt_dlp
