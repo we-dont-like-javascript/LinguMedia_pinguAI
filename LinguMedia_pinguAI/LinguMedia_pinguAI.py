@@ -40,6 +40,40 @@ def create_styling_select():
         width="25%",
     )
 
+# Function to render the video based on the current state of the URL
+def video_display():
+    return rx.box(
+        # Conditionally display video or text prompt
+        rx.cond(
+            State.video_url == "",  # If the video URL is empty
+            rx.text(
+                "Insert any link", 
+                style={
+                    "color": "#808080", 
+                    "fontSize": "20px",
+                    "margin":"auto",
+                    "textAlign": "center",  # Center the text horizontally
+                    "paddingTop": "20px"  # Add space above the text
+                }
+            ),  # Text prompt when URL is empty
+            rx.video(  # Video component if URL is available
+                url=State.video_url,
+                width="100%",  # Full width within the container
+                height="100%",
+                margin="auto",
+                controls=True,  # Enable video controls (play, pause, etc.)
+                style={"borderRadius": "16px"}  # Rounded corners for the video
+            ),
+        ),
+        padding="20px",  # Adjusted padding
+        style={
+            "width": "100%",  # Ensure it takes full width
+            "height": "100%",
+            "maxWidth": "800px",  # Set a max width to control the video size
+            "margin": "auto",  # Center the video container
+        },
+    )
+
 
 def index() -> rx.Component:
     # Welcome Page (Index)
@@ -82,6 +116,7 @@ def index() -> rx.Component:
                     "boxShadow": "inset 0 2px 4px rgba(0, 0, 0, 0.2)",
                     "border": "1px solid #ccc"
                 },
+                on_change=lambda value: State.set_video_url(value),
             ),
             rx.button(
                 "Link",
@@ -93,6 +128,7 @@ def index() -> rx.Component:
                     "height": "42px"
                     },
                 # Handle Link to upload video here
+                on_click=lambda: State.set_video_url(State.video_url),
             ),
             create_styling_select(),
             style={
@@ -103,16 +139,22 @@ def index() -> rx.Component:
         ), # This controls the Text Input (URL) + Link Button
         rx.hstack(
             rx.box(
+                video_display(),
                 # Video Box
                 style={
-                "border": "2px solid #985555",
-                "borderRadius": "24px",
-                "width": "100%",
-                "height": "750px",
-                "marginTop": "20px",
-                "backgroundColor": "#FAFAF5"
+                    "border": "2px solid #985555",
+                    "borderRadius": "24px",
+                    "width": "80%",  # Adjusted to allow space for centering
+                    "height": "750px",
+                    "backgroundColor": "#FAFAF5",
+                    "margin": "auto",  # Ensures auto margin for centering horizontally
                 },
+                # Centering the box
+                display="flex",
+                justifyContent="center",  # Centers horizontally
+                alignItems="center",  # Centers vertically if the parent container has height
             ),
+
             rx.box(
                 # Chat Box
                 generate_stats(State.stats_data), # make it so that it can generate as much data

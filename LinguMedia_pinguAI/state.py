@@ -3,6 +3,12 @@ import reflex as rx
 class State(rx.State):
     """The app state, managing backend operations and interactions."""
     
+    video_url: str = ""  # Default URL
+
+    # Function to update the video URL
+    def set_video_url(self, new_url):
+        self.video_url = new_url
+    
     @rx.var
     def stats_data(self) -> list[dict]:
         """Retrieve data for the stats from the database or an external API."""
