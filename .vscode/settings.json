@@ -4,6 +4,7 @@
     "editor.defaultFormatter": "ms-python.autopep8"
   },
   "cSpell.words": [
+    "cartesia",
     "genai",
     "generativeai"
   ]
