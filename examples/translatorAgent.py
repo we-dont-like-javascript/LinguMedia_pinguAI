@@ -1,11 +1,13 @@
 from uagents import Agent, Context, Model
 
+
 class ContextPrompt(Model):
-  context: str
-  text: str
+    context: str
+    text: str
+
 
 class Response(Model):
-  text: str
+    text: str
 
 
 agent = Agent()

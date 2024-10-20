@@ -1,3 +1,8 @@
 reflex==0.6.3
 requests
 uagents
+python-dotenv
+google.generativeai
+cartesia
+ffmpeg-python
+websockets>=12.0
