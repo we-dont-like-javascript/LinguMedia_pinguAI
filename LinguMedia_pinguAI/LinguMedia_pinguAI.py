@@ -50,7 +50,7 @@ def create_styling_select():
 def index() -> rx.Component:
     # Welcome Page (Index)
     return rx.container(
-       # rx.color_mode.button(position="top-right"),
+       rx.color_mode.button(position="top-right"),
         rx.hstack(
             rx.hstack (
                 rx.text("Lingu", style={"fontStyle": "italic"}, size="8"),
@@ -135,6 +135,7 @@ def index() -> rx.Component:
         style={
             "width": "100%",
         },
+        size="4",
     )
 
 
