@@ -33,7 +33,7 @@ headers = {
 }
 
 
-def cartesiaTextToSpeech(transcript, language):
+def cartesiaTextToSpeech(transcript, language, fileName):
   # Data to be sent in the request
   data = {
       "model_id": model_id,
@@ -51,9 +51,10 @@ def cartesiaTextToSpeech(transcript, language):
       try:
         # Handle the response bytes (e.g., saving audio data)
         # with open("./audios/"+str(transcript)+".wav", "wb") as f:
-        with open("../audios/test.wav", "wb") as f:
+        with open(f"./audios/{fileName}.wav", "wb") as f:
             f.write(response.content)
-      except:
+      except Exception as e:
+          print(f"error: {e}")
           print(f"Failed to save wav file for \"{str(transcript)}\"")
   else:
       print(f"Request failed with status code {response.status_code}")

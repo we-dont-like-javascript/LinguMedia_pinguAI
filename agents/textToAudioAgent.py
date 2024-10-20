@@ -40,9 +40,17 @@ async def textToAudio_message_handler(ctx: Context, sender: str, msg: Message):
     errorInput = False
     if data == None:
         errorInput = True
-    elif "transcript" not in data or "language" not in data:
+    elif "transcript" not in data:
         errorInput = True
-    elif not isinstance(data["transcript"], str) or not isinstance(data["language"], str):
+    elif "translation" not in data:
+        errorInput = True
+    elif "language" not in data:
+        errorInput = True
+    elif not isinstance(data["transcript"], str):
+        errorInput = True
+    elif not isinstance(data["translation"], str):
+        errorInput = True
+    elif not isinstance(data["language"], str):
         errorInput = True
       
     if errorInput:
@@ -50,5 +58,5 @@ async def textToAudio_message_handler(ctx: Context, sender: str, msg: Message):
         return
     
     # correct input
-    cartesiaTextToSpeech(data["transcript"], data["language"])
+    cartesiaTextToSpeech(data["transcript"], data["language"], data["translation"])
     
