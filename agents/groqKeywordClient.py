@@ -60,6 +60,6 @@ for segment in transcription:
         "keywords": keywords
     }
     if json_struct["keywords"]:
-        print(json_struct)
+        print(json.dumps(json_struct, indent=4))
     else:
         continue
