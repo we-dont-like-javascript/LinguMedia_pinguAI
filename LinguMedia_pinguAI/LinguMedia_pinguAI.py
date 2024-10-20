@@ -1,13 +1,7 @@
-"""Welcome to Reflex! This file outlines the steps to create a basic app."""
-
 import reflex as rx
-
 from rxconfig import config
-
-
-class State(rx.State):
-    """The app state."""
-    ...
+from LinguMedia_pinguAI.chatbox import stats, generate_stats
+from LinguMedia_pinguAI.state import State
 
 def create_select_option(option_value, option_text):
     """Create a select option element with the given value and text."""
@@ -120,7 +114,9 @@ def index() -> rx.Component:
                 },
             ),
             rx.box(
-                # Quiz Box
+                # Chat Box
+                generate_stats(State.stats_data), # make it so that it can generate as much data
+                padding="15px",
                 style={
                 "border": "2px solid #985555",
                 "borderRadius": "24px",
