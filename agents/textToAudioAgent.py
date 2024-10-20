@@ -54,9 +54,11 @@ async def textToAudio_message_handler(ctx: Context, sender: str, msg: Message):
         errorInput = True
       
     if errorInput:
+        ctx.logger.error(f"textToAudio received invalid input:{msg.jsonStr}")
         await ctx.send(sender, Response(jsonStr="", errorStr="Error Input"))
         return
     
     # correct input
-    cartesiaTextToSpeech(data["transcript"], data["language"], data["translation"])
+    audioPath = cartesiaTextToSpeech(data["transcript"], data["language"], data["translation"])
+    await ctx.send(sender, Response(jsonStr=audioPath, errorStr=""))
     

@@ -53,10 +53,14 @@ def cartesiaTextToSpeech(transcript, language, fileName):
         # with open("./audios/"+str(transcript)+".wav", "wb") as f:
         with open(f"./audios/{fileName}.wav", "wb") as f:
             f.write(response.content)
+        
+        return f"./audios/{fileName}.wav"
       except Exception as e:
           print(f"error: {e}")
           print(f"Failed to save wav file for \"{str(transcript)}\"")
+          return None
   else:
       print(f"Request failed with status code {response.status_code}")
       print(response.text)
+      return None
 
