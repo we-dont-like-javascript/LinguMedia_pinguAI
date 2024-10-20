@@ -1,6 +1,6 @@
 import json
 
-def parseJson(jsonStr):
+def jsonParser(jsonStr):
     try:
         # Attempt to parse the JSON string
         parsed_data = json.loads(jsonStr)

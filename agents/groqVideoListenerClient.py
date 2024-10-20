@@ -57,7 +57,6 @@ def transcribe_youtube_audio(youtube_link, language):
             'end': segment['end'],
             'text': segment['text']
         })
-
     # should probably delete the video here
     video_file = "test1.mp4"
     if os.path.exists(video_file):

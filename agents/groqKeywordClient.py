@@ -2,7 +2,7 @@ import os
 from groq import Groq, GroqError
 from dotenv import load_dotenv
 import json
-from .groqVideoListenerClient import transcribe_youtube_audio
+from groqVideoListenerClient import transcribe_youtube_audio
 
 # Load environment variables from .env file
 load_dotenv()
@@ -45,21 +45,21 @@ def get_Keywords(query, languageFrom, languageTo):
     except GroqError as e:
         return None
 
-url = 'https://www.youtube.com/watch?v=C_y7zQUZ7pM'  # Replace with the desired video URL
-languageFrom = "chinese"
-languageTo = "english"
-transcription = transcribe_youtube_audio(url, languageFrom)
-for segment in transcription:
-    query = segment['text']
-    time_start = segment['start']
-    time_end = segment['end']
-    keywords = get_Keywords(query, languageFrom, languageTo)
-    json_struct = {
-        "time_start": time_start,
-        "time_end": time_end,
-        "keywords": keywords
-    }
-    if json_struct["keywords"]:
-        print(json.dumps(json_struct, indent=4))
-    else:
-        continue
+# url = 'https://www.youtube.com/watch?v=C_y7zQUZ7pM'  # Replace with the desired video URL
+# languageFrom = "chinese"
+# languageTo = "english"
+# transcription = transcribe_youtube_audio(url, languageFrom)
+# for segment in transcription:
+#     query = segment['text']
+#     time_start = segment['start']
+#     time_end = segment['end']
+#     keywords = get_Keywords(query, languageFrom, languageTo)
+#     json_struct = {
+#         "time_start": time_start,
+#         "time_end": time_end,
+#         "keywords": keywords
+#     }
+#     if json_struct["keywords"]:
+#         print(json.dumps(json_struct, indent=4))
+#     else:
+#         continue

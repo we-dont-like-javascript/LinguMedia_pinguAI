@@ -1,48 +1,69 @@
 from uagents import Agent, Context, Model
-import groqKeywordClient
-import jsonParser
+from groqKeywordClient import get_Keywords
+from jsonParser import jsonParser
 import json
 
 keywordGenPort = 8085
 
-agent = Agent(
-    name="VideoListenerAgent",
+keywordGeneratorAgent = Agent(
+    name="keywordGeneratorAgent",
     port=keywordGenPort,
-    seed="callhack-11.0-wdljs-videolistener",
+    seed="callhack-11.0-wdljs-keywordgenerator",
     endpoint=[f"http://127.0.0.1:{str(keywordGenPort)}/submit"]
 )
 
-class keywordGeneratorRequest(Model):
-    query: str
-    languageFrom: str
-    languageTo: str
+class Message(Model):
+    jsonStr: str
 
-class keywordGeneratorResponse(Model):
-    json_file: str
+class Response(Model):
+    jsonStr: str
     errorStr: str
 
-@agent.on_event("startup")
+recepientAddress = (
+    f"keywordGeneratorAgent://endpoint"
+)
+
+@keywordGeneratorAgent.on_event("startup")
 async def  starUp_printing(ctx: Context):
-    ctx.logger.info(f"VideoListenerAgent running, address:{agent.address}")
-@agent.on_message(model=keywordGeneratorRequest)
-async def videoListener(ctx: Context, sender: str, request: keywordGeneratorRequest):
+    ctx.logger.info(f"KeywordAgent running, address:{keywordGeneratorAgent.address}")
+@keywordGeneratorAgent.on_message(model=Message)
+async def keywordGenerator(ctx: Context, sender: str, request: Message):
     
-    data = jsonParser.parseJson(request.jsonStr)
+    data = jsonParser(request.jsonStr)
 
     # input validation
     errorInput = False
     if data == None:
+        print("data is None")
         errorInput = True
-    elif "query" not in data or "languageFrom" not in data or "languageTo" not in data:
-        errorInput = True
-    elif not isinstance(data["query"], str) or not isinstance(data["languageFrom"], str) or not isinstance(data["languageTo"], str):
+    elif "start" not in data or "end" not in data or "text" not in data or "languageFrom" not in data or "languageTo" not in data:
+        print ("missing fields in data: start, end, text, languageFrom, or languageTo")
         errorInput = True
 
     if errorInput:
-        await ctx.send(sender, keywordGeneratorResponse(json_file="", errorStr="Error Input"))
+        print("Error Input in keywordGenerator")
         return
     
-    keywords = groqKeywordClient.get_Keywords(request.query, request.languageFrom, request.languageTo)
-    await ctx.send(request.client_address, keywordGeneratorResponse(json_file=keywords))
-
-agent.run()
+    start = data["start"]
+    end = data["end"]
+    query = data["text"]
+    languageFrom = data["languageFrom"]
+    languageTo = data["languageTo"]
+    
+    print("Getting keywords")
+    keywords = get_Keywords(query, languageFrom, languageTo)
+    print("Keywords complete")
+    language_dict = {
+        "chinese": "zh",
+        "english": "en",
+    }
+    #add language to keywords
+    jsonStruct = {
+        "start": start,
+        "end": end,
+        "keywords": keywords,
+        "language": language_dict[languageFrom],
+    }
+    if jsonStruct["keywords"]:
+        print(jsonStruct)
+    #await ctx.send(recepientAddress, Message(jsonStr=keywords))
