@@ -3,3 +3,6 @@ requests
 uagents
 python-dotenv
 google.generativeai
+cartesia
+ffmpeg-python
+websockets>=12.0
