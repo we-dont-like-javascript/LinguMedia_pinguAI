@@ -1,11 +1,12 @@
 from dotenv import load_dotenv
 import json
-from groq import Groq
+from groq import Groq, GroqError
 import os
 import yt_dlp
 
 # Load environment variables from .env file
 load_dotenv()
+api_key = os.getenv('GROQ_API_KEY_2')
 
 def download_youtube_video(url, output_path="test1.mp4"):
     ydl_opts = {
@@ -21,13 +22,16 @@ def download_youtube_video(url, output_path="test1.mp4"):
         print(f"Error downloading video: {e}")
 
 # Function to transcribe YouTube audio
-def transcribe_youtube_audio(youtube_link):
-    # Set the GROQ_API_KEY environment variable
-    GROQ_API_KEY = os.getenv('GROQ_API_KEY')
-    os.environ['GROQ_API_KEY'] = GROQ_API_KEY
+def transcribe_youtube_audio(youtube_link, language):
+    languagedict = {
+        "chinese": "zh",
+        "english": "en",
+    }
 
-    # Create a Groq client with the API key
-    client = Groq()
+    if api_key is None:
+        assert("GROQ_API_KEY is not set")
+
+    client = Groq(api_key=api_key)
 
     # Download the YouTube video audio
     download_youtube_video(youtube_link, output_path="test1.mp4")
@@ -39,9 +43,10 @@ def transcribe_youtube_audio(youtube_link):
     with open(filename, "rb") as file:
         transcription = client.audio.transcriptions.create(
             file=(filename, file.read()),
-            model="whisper-large-v3-turbo",
+            model="whisper-large-v3",
             prompt="You're a video to text expert, for a language learning app. Transcribe the audio/video content, accurately capturing the spoken words and phrases.\n\n",
             response_format="verbose_json",
+            language= languagedict[language]
         )
         
     # Extract start, end, and text in a JSON format
@@ -53,12 +58,6 @@ def transcribe_youtube_audio(youtube_link):
             'text': segment['text']
         })
 
-    # Convert to JSON string if needed
-    segments_json_str = json.dumps(segments_json, indent=4)
-
-    # Print or return the JSON format
-    print(segments_json_str)
-    
     # should probably delete the video here
     video_file = "test1.mp4"
     if os.path.exists(video_file):
@@ -66,7 +65,5 @@ def transcribe_youtube_audio(youtube_link):
         print(f"{video_file} has been deleted.")
     else:
         print(f"{video_file} does not exist.")
-
-    
-url = 'https://www.youtube.com/watch?v=bSEXPzkO3J4'  # Replace with the desired video URL
-transcribe_youtube_audio(url)
+    # Print or return the JSON format
+    return segments_json
