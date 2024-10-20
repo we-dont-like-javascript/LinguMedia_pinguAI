@@ -51,7 +51,7 @@ def cartesiaTextToSpeech(transcript, language):
       try:
         # Handle the response bytes (e.g., saving audio data)
         # with open("./audios/"+str(transcript)+".wav", "wb") as f:
-        with open("./audios/test.wav", "wb") as f:
+        with open("../audios/test.wav", "wb") as f:
             f.write(response.content)
       except:
           print(f"Failed to save wav file for \"{str(transcript)}\"")

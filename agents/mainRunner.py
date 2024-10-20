@@ -20,10 +20,10 @@ async def test_agents(ctx: Context):
   }
   print("-- send to textToAudio")
   data_jsonStr = json.dumps(data)
-  RECIPIENT_ADDRESS = (
+  recipient_address = (
     f"test-agent://{textToAudioAgent.address}"
   )
-  response = await ctx.send(RECIPIENT_ADDRESS, Message(jsonStr=data_jsonStr))
+  response = await ctx.send(recipient_address, Message(jsonStr=data_jsonStr))
   
   print(f"response:{response}")
 
